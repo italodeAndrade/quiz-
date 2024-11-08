@@ -1,20 +1,21 @@
 package com.example.quiz
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val userName = intent.getStringExtra("userName") ?: "Usuário"
+        val greetingTextView = findViewById<TextView>(R.id.greetingTextView)
+        greetingTextView.text = "Bem-vindo, $userName!"
+
+        val startButton = findViewById<Button>(R.id.startButton)
+        startButton.setOnClickListener {
         }
     }
 }
