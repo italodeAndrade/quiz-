@@ -22,12 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.CardDefaults
 
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 @Composable
 fun LeaderboardScreen(userDao: UserDao) {
     val leaderboard = remember { mutableStateOf<List<User>>(emptyList()) }
 
     LaunchedEffect(true) {
-        leaderboard.value = userDao.getTopUsers()
+        leaderboard.value = withContext(Dispatchers.IO) {
+            userDao.getTopUsers()
+        }
     }
 
     Column(
@@ -54,6 +59,7 @@ fun LeaderboardScreen(userDao: UserDao) {
         }
     }
 }
+
 
 @Composable
 fun LeaderboardItem(user: User, imageResId: Int) {

@@ -42,11 +42,21 @@ class MainActivity : ComponentActivity() {
                         MenuScreen(navController, userName.value)
                     }
                     composable("quiz_screen") {
-                        QuizScreen(questions = getQuestions(), userDao = userDao, onFinishQuiz = { score ->
-                            saveScore(userName.value, score)
-                        })
+                        QuizScreen(
+                            questions = getQuestions(),
+                            userDao = userDao,
+                            userName = userName.value,
+                            onFinishQuiz = { score ->
+                                saveScore(userName.value, score)
+                                navController.navigate("menu_screen") {
+                                    launchSingleTop = true
+                                }
+                            }
+                        )
                     }
-                    composable("leaderboard_screen") { LeaderboardScreen(userDao = userDao) }
+                    composable("leaderboard_screen") {
+                        LeaderboardScreen(userDao = userDao)
+                    }
                 }
             }
         }
@@ -84,11 +94,23 @@ class MainActivity : ComponentActivity() {
                 options = listOf("Terra", "Júpiter", "Saturno", "Marte"),
                 correctAnswer = "Júpiter",
                 imageResId = R.drawable.jupiter
-            )
+            ),
+            Question(
+                questionText = "Qual invenção é atribuída a Alexander Graham Bell?",
+                options = listOf("Telefone", "Lâmpada", "Rádio", "Computador"),
+                correctAnswer = "Telefone",
+                imageResId = R.drawable.bell
+            ),
+            Question(
+                questionText = "Qual é a fórmula química do gás carbônico?",
+                options = listOf("CO2", "O2", "CH4", "H2O"),
+                correctAnswer = "CO2",
+                imageResId = R.drawable.molecula
+            ),
         ).shuffled()
             .map { question ->
                 question.copy(options = question.options.shuffled())
             }
     }
-
 }
+
