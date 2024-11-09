@@ -1,6 +1,6 @@
 [versions]
 agp = "8.6.1"
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -10,6 +10,10 @@ material = "1.12.0"
 activity = "1.9.2"
 constraintlayout = "2.1.4"
 room = "2.5.2"
+compose = "1.5.0"
+material3 = "1.1.0"
+activityCompose = "1.7.2"
+navigation = "2.6.0"
 
 [libraries]
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
@@ -23,8 +27,15 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+composeUi = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+composeFoundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+composeRuntime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
+compose_ui_tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose_ui_tooling_preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+activityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+composeMaterial3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
