@@ -78,8 +78,6 @@ class InputNameActivity : ComponentActivity() {
     }
 }
 
-
-
 @Composable
 fun InputNameScreen(onNameSubmit: (String) -> Unit) {
     var name by remember { mutableStateOf("") }

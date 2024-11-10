@@ -3,16 +3,15 @@ package com.example.quiz
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.room.Room
+import androidx.navigation.NavController
 import com.example.quiz.ui.theme.QuizTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.room.Room
 
 class MainActivity : ComponentActivity() {
     private lateinit var db: AppDatabase
@@ -31,26 +30,19 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuizTheme {
                 val navController = rememberNavController()
-                val userName = remember { mutableStateOf("Jogador") }
-
-                LaunchedEffect(Unit) {
-                    userName.value = getUserName()
-                }
+                val userName = intent.getStringExtra("userName") ?: "Jogador"
 
                 NavHost(navController = navController, startDestination = "menu_screen") {
                     composable("menu_screen") {
-                        MenuScreen(navController, userName.value)
+                        MenuScreen(navController = navController, userName = userName)
                     }
                     composable("quiz_screen") {
                         QuizScreen(
                             questions = getQuestions(),
                             userDao = userDao,
-                            userName = userName.value,
+                            userName = userName,
                             onFinishQuiz = { score ->
-                                saveScore(userName.value, score)
-                                navController.navigate("menu_screen") {
-                                    launchSingleTop = true
-                                }
+                                finishQuizAndNavigateBack(navController, userName, score)
                             }
                         )
                     }
@@ -62,22 +54,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun getUserName(): String {
-        return withContext(Dispatchers.IO) {
-            val user = userDao.getTopUsers().firstOrNull()
-            user?.name ?: "Jogador"
-        }
-    }
-
-    private fun saveScore(name: String, score: Int) {
-        lifecycleScope.launch {
+    private fun finishQuizAndNavigateBack(navController: NavController, userName: String, score: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                withContext(Dispatchers.IO) {
-                    userDao.insert(User(name = name, score = score))
-                }
+                userDao.insert(User(name = userName, score = score))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+
+        navController.navigate("menu_screen") {
+            popUpTo("quiz_screen") { inclusive = true }
         }
     }
 
@@ -107,10 +94,8 @@ class MainActivity : ComponentActivity() {
                 correctAnswer = "CO2",
                 imageResId = R.drawable.molecula
             ),
-        ).shuffled()
-            .map { question ->
-                question.copy(options = question.options.shuffled())
-            }
+        ).shuffled().map { question ->
+            question.copy(options = question.options.shuffled())
+        }
     }
 }
-

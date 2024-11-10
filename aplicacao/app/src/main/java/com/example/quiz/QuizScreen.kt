@@ -9,15 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun QuizScreen(questions: List<Question>, userDao: UserDao, userName: String, onFinishQuiz: (Int) -> Unit) {
+fun QuizScreen(
+    questions: List<Question>,
+    userDao: UserDao,
+    userName: String,
+    onFinishQuiz: (Int) -> Unit
+) {
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var score by remember { mutableStateOf(0) }
     val question = questions[currentQuestionIndex]
@@ -73,6 +76,7 @@ fun QuizScreen(questions: List<Question>, userDao: UserDao, userName: String, on
         }
     }
 }
+
 
 
 

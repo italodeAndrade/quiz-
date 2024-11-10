@@ -3,7 +3,6 @@ package com.example.quiz
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,9 +15,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Card
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.CardDefaults
 
 
@@ -29,7 +25,7 @@ import kotlinx.coroutines.withContext
 fun LeaderboardScreen(userDao: UserDao) {
     val leaderboard = remember { mutableStateOf<List<User>>(emptyList()) }
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         leaderboard.value = withContext(Dispatchers.IO) {
             userDao.getTopUsers()
         }
@@ -60,7 +56,6 @@ fun LeaderboardScreen(userDao: UserDao) {
     }
 }
 
-
 @Composable
 fun LeaderboardItem(user: User, imageResId: Int) {
     Card(
@@ -86,4 +81,3 @@ fun LeaderboardItem(user: User, imageResId: Int) {
         }
     }
 }
-
