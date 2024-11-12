@@ -11,6 +11,12 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import androidx.room.Room
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import android.content.Intent
+import kotlinx.coroutines.withContext
+
 
 @OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
@@ -112,18 +118,25 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun finishQuizAndNavigateBack(navController: NavController, userName: String, score: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             try {
-                userDao.insert(User(name = userName, score = score))
+                withContext(Dispatchers.IO) {
+                    userDao.insert(User(name = userName, score = score))
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
 
-        navController.navigate("menu_screen") {
-            popUpTo("quiz_screen") { inclusive = true }
-        }
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtra("userName", userName)
+        startActivity(intent)
+        finish()
     }
+
+
+
 
     private fun getQuestions(): List<Question> {
         return listOf(

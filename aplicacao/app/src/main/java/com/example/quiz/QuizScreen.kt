@@ -19,6 +19,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.graphicsLayer
+import kotlinx.coroutines.delay
 
 @Composable
 fun QuizScreen(
@@ -50,7 +51,7 @@ fun QuizScreen(
     ) {
         AnimatedVisibility(
             visible = visible,
-            enter = fadeIn(animationSpec = tween(500)) + 
+            enter = fadeIn(animationSpec = tween(500)) +
                     slideInVertically(initialOffsetY = { -40 })
         ) {
             Image(
@@ -59,19 +60,12 @@ fun QuizScreen(
                 modifier = Modifier
                     .size(200.dp)
                     .padding(bottom = 16.dp)
-                    .graphicsLayer {
-                        alpha = visible.animateFloat(
-                            initialValue = 0f,
-                            targetValue = 1f,
-                            animationSpec = tween(500)
-                        ).value
-                    }
             )
         }
 
         AnimatedVisibility(
             visible = visible,
-            enter = fadeIn(animationSpec = tween(500)) + 
+            enter = fadeIn(animationSpec = tween(500)) +
                     slideInVertically(initialOffsetY = { -20 })
         ) {
             Text(
@@ -87,7 +81,7 @@ fun QuizScreen(
 
             AnimatedVisibility(
                 visible = visible,
-                enter = fadeIn(animationSpec = tween(500, delayMillis = 100 * index)) + 
+                enter = fadeIn(animationSpec = tween(500, delayMillis = 100 * index)) +
                         slideInHorizontally(
                             initialOffsetX = { 100 },
                             animationSpec = tween(500, delayMillis = 100 * index)
