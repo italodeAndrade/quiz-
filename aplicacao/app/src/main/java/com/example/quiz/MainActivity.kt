@@ -3,16 +3,16 @@ package com.example.quiz
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavController
 import com.example.quiz.ui.theme.QuizTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import androidx.room.Room
 
+@OptIn(ExperimentalAnimationApi::class)
 class MainActivity : ComponentActivity() {
     private lateinit var db: AppDatabase
     private lateinit var userDao: UserDao
@@ -29,14 +29,57 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             QuizTheme {
-                val navController = rememberNavController()
+                val navController = rememberAnimatedNavController()
                 val userName = intent.getStringExtra("userName") ?: "Jogador"
 
-                NavHost(navController = navController, startDestination = "menu_screen") {
-                    composable("menu_screen") {
+                AnimatedNavHost(
+                    navController = navController,
+                    startDestination = "menu_screen"
+                ) {
+                    composable(
+                        route = "menu_screen",
+                        enterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { 1000 },
+                                animationSpec = tween(500)
+                            ) + fadeIn(animationSpec = tween(500))
+                        },
+                        exitTransition = {
+                            slideOutHorizontally(
+                                targetOffsetX = { -1000 },
+                                animationSpec = tween(500)
+                            ) + fadeOut(animationSpec = tween(300))
+                        },
+                        popEnterTransition = {
+                            slideInHorizontally(
+                                initialOffsetX = { -1000 },
+                                animationSpec = tween(500)
+                            ) + fadeIn(animationSpec = tween(500))
+                        },
+                        popExitTransition = {
+                            slideOutHorizontally(
+                                targetOffsetX = { 1000 },
+                                animationSpec = tween(500)
+                            ) + fadeOut(animationSpec = tween(300))
+                        }
+                    ) {
                         MenuScreen(navController = navController, userName = userName)
                     }
-                    composable("quiz_screen") {
+                    composable(
+                        route = "quiz_screen",
+                        enterTransition = {
+                            slideInVertically(
+                                initialOffsetY = { 1000 },
+                                animationSpec = tween(500)
+                            ) + fadeIn(animationSpec = tween(500))
+                        },
+                        exitTransition = {
+                            slideOutVertically(
+                                targetOffsetY = { -1000 },
+                                animationSpec = tween(500)
+                            ) + fadeOut(animationSpec = tween(300))
+                        }
+                    ) {
                         QuizScreen(
                             questions = getQuestions(),
                             userDao = userDao,
@@ -46,7 +89,21 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                    composable("leaderboard_screen") {
+                    composable(
+                        route = "leaderboard_screen",
+                        enterTransition = {
+                            scaleIn(
+                                initialScale = 0.8f,
+                                animationSpec = tween(500)
+                            ) + fadeIn(animationSpec = tween(500))
+                        },
+                        exitTransition = {
+                            scaleOut(
+                                targetScale = 1.2f,
+                                animationSpec = tween(500)
+                            ) + fadeOut(animationSpec = tween(300))
+                        }
+                    ) {
                         LeaderboardScreen(userDao = userDao)
                     }
                 }
